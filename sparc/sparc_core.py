@@ -396,7 +396,10 @@ class SPARC(FileIOCalculator):
         f.write('KPOINT_GRID: {} {} {}\n'.format(*kpt_grid))
         
         kpt_shift = self.interpret_kpoint_shift(atoms, **kwargs)
-        f.write('KPOINT_SHIFT: {} {} {}\n'.format(*kpt_shift))
+        if len(kpt_shift) == 3:
+            f.write('KPOINT_SHIFT: {} {} {}\n'.format(*kpt_shift))
+        else:
+            pass
 
         # convert input to usable format
         downsampling_grid = self.interpret_downsampling_input(atoms, **kwargs)
@@ -615,7 +618,8 @@ class SPARC(FileIOCalculator):
                 raise InputError('KPOINT_SHIFT must be either a length 3 object'
                                  ' (i.e. (4,4,4)) or a string (i.e. \'4 4 4 \')')
         else:
-            kpt_shift = (0, 0, 0)
+            kpt_shift = None
+            # kpt_shift = (0, 0, 0)
         return kpt_shift
 
     def get_pseudopotential_directory(self,pseudo_dir=None,
